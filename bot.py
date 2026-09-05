@@ -496,11 +496,28 @@ def build_application() -> Application:
     application.add_handler(
         MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome)
     )
-    application.add_handler(
+    application.add_handler
         MessageHandler(filters.TEXT & ~filters.COMMAND, message_router)
-    )
+    ) 
+        application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hamto_reply))
+
     application.add_error_handler(error_handler)
     return application
+
+HAMTO_RESPONSES = [
+    "عيون حمتو 💋",
+    "احكي",
+    "مافاضي ليك",
+    "كلامك كتير 🙂",
+    "عيونه😔"
+]
+
+async def hamto_reply(update: ContextTypes.DEFAULT_TYPE, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message or not update.message.text:
+        return
+    text = update.message.text.lower()
+    if "بوت" in text or "حمتو" in text:
+        await update.message.reply_text(random.choice(HAMTO_RESPONSES))
 
 
 def main() -> None:
