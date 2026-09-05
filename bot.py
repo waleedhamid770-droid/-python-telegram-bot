@@ -1,5 +1,3 @@
-"""Arabic Telegram games bot built with python-telegram-bot."""
-
 from __future__ import annotations
 
 import json
@@ -76,6 +74,14 @@ RPS_NAMES: Final[dict[str, str]] = {
     "paper": "📄 ورق",
     "scissors": "✂️ مقص",
 }
+
+HAMTO_RESPONSES: Final[list[str]] = [
+    "عيون حمتو 💋",
+    "احكي",
+    "مافاضي ليك",
+    "كلامك كتير 🙂",
+    "عيونه😔",
+]
 
 
 def get_token() -> str:
@@ -390,7 +396,7 @@ async def handle_guess(
         )
     else:
         hint = "أكبر" if number < target else "أصغر"
-        await query.answer(f"جرّب رقماً {hint} من {number}!")
+        await query.answer(f"جرّب رقماً هذا {hint} من {number}!")
 
 
 async def handle_quiz(
@@ -449,6 +455,14 @@ async def callbacks(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await query.answer()
 
 
+async def hamto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    if not update.message or not update.message.text:
+        return
+    text = update.message.text.lower()
+    if "بوت" in text or "حمتو" in text:
+        await update.message.reply_text(random.choice(HAMTO_RESPONSES))
+
+
 async def message_router(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if update.effective_message and update.effective_message.text:
         if await moderation_message(update, context):
@@ -459,11 +473,6 @@ async def message_router(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
             ] = player_name(update.effective_user)
         if await handle_extra_text(update, context, update.effective_message.text):
             return
-        await context.bot.send_chat_action(
-            chat_id=update.effective_chat.id if update.effective_chat else 0,
-            action=ChatAction.TYPING,
-        )
-        await update.effective_message.reply_text(update.effective_message.text)
 
 
 async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> None:
@@ -471,7 +480,17 @@ async def error_handler(update: object, context: ContextTypes.DEFAULT_TYPE) -> N
 
 
 def build_application() -> Application:
-    application = ApplicationBuilder().token(get_token()).build()
+    proxy_url = "http://proxy.server:3128"
+    application = (
+        ApplicationBuilder()
+        .token(get_token())
+        .get_updates_http_version("1.1")
+        .http_version("1.1")
+        .proxy(proxy_url)
+        .get_updates_proxy(proxy_url)
+        .build()
+    )
+
     for command, handler in (
         ("start", start),
         ("help", help_command),
@@ -492,32 +511,16 @@ def build_application() -> Application:
         ("unban", unban_command),
     ):
         application.add_handler(CommandHandler(command, handler))
+    
     application.add_handler(CallbackQueryHandler(callbacks))
     application.add_handler(
         MessageHandler(filters.StatusUpdate.NEW_CHAT_MEMBERS, welcome)
     )
-    application.add_handler
-        MessageHandler(filters.TEXT & ~filters.COMMAND, message_router)
-    ) 
-        application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hamto_reply))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, hamto_reply))
+    application.add_handler(MessageHandler(filters.TEXT & ~filters.COMMAND, message_router))
 
     application.add_error_handler(error_handler)
     return application
-
-HAMTO_RESPONSES = [
-    "عيون حمتو 💋",
-    "احكي",
-    "مافاضي ليك",
-    "كلامك كتير 🙂",
-    "عيونه😔"
-]
-
-async def hamto_reply(update: ContextTypes.DEFAULT_TYPE, context: ContextTypes.DEFAULT_TYPE) -> None:
-    if not update.message or not update.message.text:
-        return
-    text = update.message.text.lower()
-    if "بوت" in text or "حمتو" in text:
-        await update.message.reply_text(random.choice(HAMTO_RESPONSES))
 
 
 def main() -> None:
