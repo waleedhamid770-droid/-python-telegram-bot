@@ -453,14 +453,13 @@ async def callbacks(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await handle_quiz(query, context, int(question_id), int(answer))
     else:
         await query.answer()
-
-
 async def hamto_reply(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     if not update.message or not update.message.text:
         return
     text = update.message.text.lower()
     if "بوت" in text or "حمتو" in text:
         await update.message.reply_text(random.choice(HAMTO_RESPONSES))
+
 
 
 async def message_router(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
