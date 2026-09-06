@@ -3,6 +3,9 @@ from __future__ import annotations
 import json
 import logging
 import os
+os.environ["http_proxy"] = "http://proxy.server:3128"
+os.environ["https_proxy"] = "http://proxy.server:3128"
+
 import random
 import threading
 from pathlib import Path
