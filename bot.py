@@ -520,6 +520,9 @@ def build_application() -> Application:
 
     application.add_error_handler(error_handler)
     return application
+async def hamto_response(u, c):
+    if u.message and u.message.text and "حمتو" in u.message.text:
+        await u.message.reply_text(random.choice(["عيون حمتو", "ارحبوو", "كلامك كتير", "مافضي ليك", "زحلق ياخ"]))
 
 
 def main() -> None:
