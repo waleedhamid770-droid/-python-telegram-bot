@@ -135,7 +135,7 @@ async def whisper_command(update: Update, context: ContextTypes.DEFAULT_TYPE) ->
 
 # ==================== المنهج الرئيسي وتشغيل البوت ====================
 def main() -> None:
-    token = "YOUR_BOT_TOKEN_HERE"  # ضع التوكن الخاص بك هنا
+    token = "8925123826:AAELvHygnvX5ck3M6hasr7s8VWZXHubRRzI"  # ضع التوكن الخاص بك هنا
     application = ApplicationBuilder().token(token).build()
 
     # المعالجات (Handlers)
