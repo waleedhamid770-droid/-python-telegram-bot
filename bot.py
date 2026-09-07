@@ -485,13 +485,15 @@ def build_application() -> Application:
     proxy_url = "http://proxy.server:3128"
     application = (
         ApplicationBuilder()
-        .token(get_token())
+        .token("8925123826 AAELvHygnvX5ck3M6hasr7s8VWZXHubRRzI")
         .get_updates_http_version("1.1")
         .http_version("1.1")
         .proxy(proxy_url)
         .get_updates_proxy(proxy_url)
         .build()
     )
+    return application
+
 
     for command, handler in (
         ("start", start),
