@@ -495,7 +495,7 @@ def build_application() -> Application:
     return application
 
 
-    for command, handler in (
+        for command, handler in (
         ("start", start),
         ("help", help_command),
         ("about", about),
@@ -514,6 +514,7 @@ def build_application() -> Application:
         ("ban", ban_command),
         ("unban", unban_command),
     ):
+
         application.add_handler(CommandHandler(command, handler))
     
     application.add_handler(CallbackQueryHandler(callbacks))
