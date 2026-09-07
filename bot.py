@@ -494,6 +494,7 @@ def build_application() -> Application:
     )
     return application
 
+async def hamto_response(update, context):
 
         for command, handler in (
         ("start", start),
